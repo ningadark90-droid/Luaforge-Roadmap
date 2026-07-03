@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuaForge — Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B;
+    --surface:#121214;
+    --surface-elevated:#1A1A1D;
+    --primary:#FFFFFF;
+    --secondary:#A1A1AA;
+    --accent:#007AFF;
+    --accent2:#FF3B30;
+    --border:rgba(255,255,255,0.1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--primary);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .heading{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{width:100%; max-width:1200px; margin:0 auto; padding:0 24px;}
+  @media(min-width:768px){.wrap{padding:0 48px;}}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    backdrop-filter:blur(24px);
+    background:rgba(0,0,0,0.6);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:1200px; margin:0 auto; padding:0 24px;
+    height:64px; display:flex; align-items:center; justify-content:space-between;
+  }
+  @media(min-width:768px){.nav-inner{padding:0 48px;}}
+  .logo{display:flex; align-items:center; gap:8px;}
+  .logo-mark{width:22px; height:22px; position:relative; flex:none;}
+  .logo-mark .a{position:absolute; inset:0; border:1px solid rgba(255,255,255,.4); transform:rotate(45deg);}
+  .logo-mark .b{position:absolute; inset:5px; background:var(--accent);}
+  .logo-text{font-weight:900; letter-spacing:-0.03em; font-size:1.05rem;}
+  .logo-badge{
+    display:none; font-size:10px; color:rgba(255,255,255,.4);
+    border:1px solid rgba(255,255,255,.15); padding:2px 6px; margin-left:6px;
+  }
+  @media(min-width:640px){.logo-badge{display:inline;}}
+  .nav-links{display:none; align-items:center; gap:32px; font-size:12px; text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.6);}
+  @media(min-width:768px){.nav-links{display:flex;}}
+  .nav-links a:hover{color:#fff;}
+  .nav-ctas{display:none; align-items:center; gap:12px;}
+  @media(min-width:640px){.nav-ctas{display:flex;}}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.15em;
+    padding:10px 16px; border-radius:0; cursor:pointer; transition:all .15s ease; border:none;
+  }
+  .btn-primary{background:#fff; color:#000;}
+  .btn-primary:hover{background:rgba(255,255,255,.8);}
+  .btn-secondary{background:transparent; border:1px solid rgba(255,255,255,.2); color:#fff;}
+  .btn-secondary:hover{background:rgba(255,255,255,.1);}
+  .nav-menu-btn{display:inline-flex; background:none; border:none; color:rgba(255,255,255,.8); cursor:pointer;}
+  @media(min-width:640px){.nav-menu-btn{display:none;}}
+  .mobile-menu{
+    display:none; flex-direction:column; gap:0; border-top:1px solid var(--border);
+    background:rgba(0,0,0,.9); backdrop-filter:blur(24px);
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    padding:16px 24px; font-family:'JetBrains Mono',monospace; font-size:12px;
+    text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.7); border-bottom:1px solid var(--border);
+  }
+
+  /* ---------- HERO ---------- */
+  #top{position:relative; min-height:100vh; padding:150px 0 96px; overflow:hidden;}
+  .hero-bg{
+    position:absolute; inset:0; opacity:.14; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,122,255,.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,122,255,.5) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(circle at 50% 30%, black 0%, transparent 70%);
+  }
+  .hero-fade{
+    position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(circle at 50% 40%, transparent 0%, #0a0a0b 72%);
+  }
+  .ticker{
+    display:flex; align-items:center; gap:12px; font-size:11px; text-transform:uppercase;
+    letter-spacing:.25em; color:rgba(255,255,255,.5); margin-bottom:40px; position:relative;
+  }
+  .dot{width:8px; height:8px; background:var(--accent); border-radius:50%; animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
+  h1.hero-h1{
+    position:relative; font-weight:900; letter-spacing:-0.04em; line-height:0.92;
+    font-size:clamp(2.6rem, 8vw, 6.5rem); max-width:900px;
+  }
+  .dim{color:rgba(255,255,255,.4);}
+  .underline-wrap{position:relative; display:inline-block;}
+  .underline-wrap .u{position:absolute; left:0; right:0; bottom:6px; height:12px; background:rgba(0,122,255,.4); z-index:0;}
+  .underline-wrap span{position:relative; z-index:1;}
+  .hero-sub{
+    margin-top:36px; max-width:640px; font-size:1.1rem; line-height:1.7; color:rgba(255,255,255,.7);
+    position:relative;
+  }
+  .hero-ctas{margin-top:32px; display:flex; flex-wrap:wrap; gap:12px; position:relative;}
+  .platform-strip{
+    margin-top:28px; display:inline-flex; align-items:center; gap:12px;
+    border:1px solid var(--border); background:rgba(255,255,255,.02);
+    padding:10px 16px; position:relative; flex-wrap:wrap;
+  }
+  .platform-strip .label{font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.25em; color:var(--accent);}
+  .platform-strip .sep{width:1px; height:16px; background:rgba(255,255,255,.15);}
+  .platform{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:rgba(255,255,255,.85);}
+  .platform svg{width:14px; height:14px; fill:currentColor;}
+  .meta-strip{
+    margin-top:56px; display:grid; grid-template-columns:repeat(2,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    position:relative;
+  }
+  @media(min-width:768px){.meta-strip{grid-template-columns:repeat(4,1fr);}}
+  .meta-strip > div{padding:20px 24px; border-right:1px solid var(--border);}
+  .meta-strip > div:nth-child(2n){border-right:none;}
+  @media(min-width:768px){.meta-strip > div:nth-child(2n){border-right:1px solid var(--border);} .meta-strip > div:last-child{border-right:none;}}
+  .meta-k{font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.4);}
+  .meta-v{font-weight:700; font-size:1.5rem; margin-top:4px;}
+  .scroll-cue{margin-top:80px; display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(255,255,255,.5); position:relative;}
+  .scroll-cue svg{animation:bounce 1.6s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);} 50%{transform:translateY(5px);}}
+  .stroke-text{
+    position:absolute; bottom:-30px; left:0; right:0; overflow:hidden; pointer-events:none; user-select:none;
+    white-space:nowrap; font-weight:900; font-size:15vw; line-height:1; letter-spacing:-.02em;
+    color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.06);
+  }
+
+  /* ---------- SECTION HEADER ---------- */
+  .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.25em; color:var(--accent); margin-bottom:14px;}
+  .section-title{font-weight:800; letter-spacing:-0.03em; font-size:clamp(1.9rem,4vw,3rem); line-height:1.1;}
+  section{padding:96px 0;}
+  @media(min-width:768px){section{padding:128px 0;}}
+
+  /* ---------- STATS ---------- */
+  .stats-grid{margin-top:48px; display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); border:1px solid var(--border);}
+  @media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
+  .stat{background:var(--bg); padding:32px 24px;}
+  .stat-v{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:2.2rem; color:#fff;}
+  .stat-l{margin-top:6px; font-size:13px; color:var(--secondary);}
+
+  /* ---------- PILLARS ---------- */
+  .pillars-grid{margin-top:56px; display:grid; grid-template-columns:1fr; gap:1px; background:var(--border); border:1px solid var(--border);}
+  @media(min-width:640px){.pillars-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:1024px){.pillars-grid{grid-template-columns:repeat(4,1fr);}}
+  .pillar{background:var(--surface); padding:32px 28px; transition:background .15s ease;}
+  .pillar:hover{background:var(--surface-elevated);}
+  .pillar-icon{width:36px; height:36px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); color:var(--accent); margin-bottom:20px;}
+  .pillar h3{font-weight:700; font-size:1.05rem; margin-bottom:10px; letter-spacing:-.01em;}
+  .pillar p{font-size:.9rem; line-height:1.6; color:var(--secondary);}
+
+  /* ---------- TIMELINE ---------- */
+  #timeline{position:relative;}
+  .timeline-rail{position:relative; margin-top:64px;}
+  .rail-line{position:absolute; left:14px; top:0; bottom:0; width:1px; background:var(--border);}
+  @media(min-width:900px){.rail-line{left:calc(33.333% - 1px);}}
+  .rail-fill{position:absolute; left:0; top:0; width:100%; height:0; background:var(--accent); transition:height .1s linear;}
+  .phase{
+    position:relative; display:grid; grid-template-columns:1fr; gap:24px; padding:36px 0 36px 40px;
+  }
+  @media(min-width:900px){.phase{grid-template-columns:1fr 2fr; gap:48px; padding:48px 0;}}
+  .phase-dot{
+    position:absolute; left:14px; top:52px; width:11px; height:11px; border-radius:50%;
+    background:var(--bg); border:2px solid rgba(255,255,255,.25); transform:translateX(-50%);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  @media(min-width:900px){.phase-dot{left:33.333%;}}
+  .phase.active .phase-dot{border-color:var(--accent); background:var(--accent);}
+  .phase-left{padding-left:8px;}
+  @media(min-width:900px){.phase-left{position:sticky; top:110px; align-self:start; padding-left:24px;}}
+  .phase-index{font-family:'JetBrains Mono',monospace; color:rgba(255,255,255,.3); font-size:13px; letter-spacing:.1em;}
+  .phase-period{font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:var(--secondary); margin-top:10px;}
+  .phase-title{font-weight:800; font-size:1.6rem; letter-spacing:-.02em; margin-top:8px; line-height:1.15;}
+  .phase-subtitle{font-size:.85rem; color:var(--secondary); margin-top:8px; line-height:1.5;}
+  .status-badge{
+    display:inline-flex; align-items:center; gap:6px; margin-top:16px; font-family:'JetBrains Mono',monospace;
+    font-size:10px; text-transform:uppercase; letter-spacing:.15em; padding:5px 10px; border:1px solid var(--border);
+  }
+  .status-complete{color:#34D399; border-color:rgba(52,211,153,.3); background:rgba(52,211,153,.06);}
+  .status-progress{color:var(--accent); border-color:rgba(0,122,255,.35); background:rgba(0,122,255,.08);}
+  .status-planned{color:var(--secondary);}
+  .progress-track{margin-top:14px; height:3px; background:rgba(255,255,255,.08); width:100%; max-width:220px;}
+  .progress-fill{height:100%; background:var(--accent);}
+  .phase-card{background:var(--surface); border:1px solid var(--border); padding:28px;}
+  .phase-summary{font-size:.92rem; line-height:1.7; color:rgba(255,255,255,.75);}
+  .block-label{font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.4); margin:24px 0 12px;}
+  .feature-list{list-style:none; display:flex; flex-direction:column; gap:9px;}
+  .feature-list li{font-size:.88rem; color:rgba(255,255,255,.8); padding-left:16px; position:relative; line-height:1.5;}
+  .feature-list li::before{content:"→"; position:absolute; left:0; color:var(--accent); font-size:.8rem;}
+  .tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag{font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.05); padding:5px 10px;}
+  .kpi-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  @media(min-width:500px){.kpi-grid{grid-template-columns:repeat(4,1fr);}}
+  .kpi{border:1px solid var(--border); padding:12px 14px;}
+  .kpi-v{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1.15rem;}
+  .kpi-l{font-size:11px; color:var(--secondary); margin-top:4px;}
+  .risk-list{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .risk-list li{font-size:.85rem; color:rgba(255,180,150,.85); padding-left:16px; position:relative; line-height:1.5;}
+  .risk-list li::before{content:"!"; position:absolute; left:0; color:var(--accent2); font-weight:700;}
+
+  /* ---------- VISION ---------- */
+  .vision-wrap{display:grid; grid-template-columns:1fr; gap:48px;}
+  @media(min-width:900px){.vision-wrap{grid-template-columns:1fr 1fr;}}
+  .vision-text p{font-size:1.05rem; line-height:1.8; color:rgba(255,255,255,.75); margin-top:20px;}
+  .vision-quote{
+    border-left:2px solid var(--accent); padding:24px 28px; background:var(--surface); font-size:1.2rem;
+    line-height:1.5; font-weight:500; letter-spacing:-.01em;
+  }
+
+  /* ---------- WAITLIST ---------- */
+  #waitlist{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--surface);}
+  .waitlist-inner{max-width:640px;}
+  .wl-form{margin-top:32px; display:flex; flex-direction:column; gap:12px;}
+  @media(min-width:560px){.wl-form{flex-direction:row;}}
+  .wl-input{
+    flex:1; background:var(--bg); border:1px solid var(--border); color:#fff; padding:14px 16px;
+    font-family:'Inter',sans-serif; font-size:.95rem; outline:none;
+  }
+  .wl-input:focus{border-color:var(--accent);}
+  .wl-note{margin-top:14px; font-size:12px; color:var(--secondary); font-family:'JetBrains Mono',monospace;}
+  .wl-success{margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#34D399; display:none;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--border); padding:56px 0;}
+  .footer-mark{overflow:hidden; user-select:none; pointer-events:none; margin-bottom:40px;}
+  .footer-mark div{font-weight:900; font-size:12vw; line-height:.85; letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.06); white-space:nowrap;}
+  .footer-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:32px; font-family:'JetBrains Mono',monospace; font-size:12px;}
+  @media(min-width:768px){.footer-grid{grid-template-columns:repeat(4,1fr);}}
+  .footer-grid .col-title{text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.4); margin-bottom:14px;}
+  .footer-grid ul{list-style:none; display:flex; flex-direction:column; gap:9px; color:rgba(255,255,255,.7);}
+  .footer-grid a:hover{color:#fff;}
+  .footer-bottom{
+    margin-top:56px; padding-top:24px; border-top:1px solid var(--border); display:flex; flex-direction:column;
+    gap:14px; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.2em; color:rgba(255,255,255,.4);
+  }
+  @media(min-width:768px){.footer-bottom{flex-direction:row; align-items:center; justify-content:space-between;}}
+  .footer-bottom .live{display:flex; align-items:center; gap:8px;}
+  .blink{animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  ::selection{background:var(--accent); color:#fff;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="#top" class="logo">
+      <div class="logo-mark"><div class="a"></div><div class="b"></div></div>
+      <span class="logo-text heading">LUAFORGE</span>
+      <span class="logo-badge mono">v0.4 · IN DEVELOPMENT</span>
+    </a>
+    <nav class="nav-links mono">
+      <a href="#timeline">Timeline</a>
+      <a href="#pillars">Pillars</a>
+      <a href="#vision">Vision</a>
+      <a href="#waitlist">Waitlist</a>
+    </nav>
+    <div class="nav-ctas">
+      <a href="#" id="downloadBtn" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        Download .md
+      </a>
+      <a href="#waitlist" class="btn btn-primary">
+        Join Waitlist
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+      </a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#timeline">Timeline</a>
+    <a href="#pillars">Pillars</a>
+    <a href="#vision">Vision</a>
+    <a href="#waitlist">Join Waitlist</a>
+  </div>
+</header>
+
+<section id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-fade"></div>
+  <div class="wrap">
+    <div class="ticker mono">
+      <span class="dot"></span>
+      <span>LuaForge Roadmap · Est. 2024</span>
+      <span style="color:rgba(255,255,255,.2)">//</span>
+      <span style="color:var(--accent)">In Development · 2026</span>
+    </div>
+    <h1 class="hero-h1 heading">
+      Make Steam games.<br>
+      <span class="dim">Never write</span>
+      <span class="underline-wrap"><span class="u"></span><span>code.</span></span>
+    </h1>
+    <p class="hero-sub">
+      LuaForge is a no-code game engine born in 2024, inspired by Roblox Studio, and built so anyone can create playable, sellable games and publish them to Steam. Drag. Drop. Wire. Ship.
+    </p>
+    <div class="hero-ctas">
+      <a href="#" id="downloadBtn2" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        Download Roadmap (.md)
+      </a>
+      <a href="#timeline" class="btn btn-secondary">
+        View Timeline
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+      </a>
+    </div>
+    <div class="platform-strip">
+      <span class="label">Coming to</span>
+      <span class="sep"></span>
+      <span class="platform"><svg viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>macOS</span>
+      <span class="platform"><svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.851"/></svg>Windows</span>
+      <span class="platform"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>Linux</span>
+    </div>
+    <div class="meta-strip">
+      <div><div class="meta-k mono">STARTED</div><div class="meta-v heading">2024</div></div>
+      <div><div class="meta-k mono">STATUS</div><div class="meta-v heading">In Dev</div></div>
+      <div><div class="meta-k mono">PHASES</div><div class="meta-v heading">6</div></div>
+      <div><div class="meta-k mono">LAUNCH</div><div class="meta-v heading">2028</div></div>
+    </div>
+    <div class="scroll-cue">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
+      Scroll to walk the timeline
+    </div>
+  </div>
+  <div class="stroke-text heading">NO-CODE ENGINE · STEAM READY ·</div>
+</section>
+
+<section id="stats" style="padding-top:0;">
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-v mono">6</div><div class="stat-l">Development Phases</div></div>
+      <div class="stat"><div class="stat-v mono">45%</div><div class="stat-l">Editor Build Progress</div></div>
+      <div class="stat"><div class="stat-v mono">2028</div><div class="stat-l">LuaForge v1.0 Release</div></div>
+      <div class="stat"><div class="stat-v mono">2027</div><div class="stat-l">Public Testing Opens</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="pillars">
+  <div class="wrap">
+    <div class="eyebrow">What we're building</div>
+    <h2 class="section-title heading">Eight pillars. One engine.</h2>
+    <div class="pillars-grid" id="pillarsGrid"></div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="eyebrow">2024 → 2028</div>
+    <h2 class="section-title heading">The build, phase by phase.</h2>
+    <div class="timeline-rail">
+      <div class="rail-line"><div class="rail-fill" id="railFill"></div></div>
+      <div id="phasesContainer"></div>
+    </div>
+  </div>
+</section>
+
+<section id="vision">
+  <div class="wrap">
+    <div class="vision-wrap">
+      <div>
+        <div class="eyebrow">Why LuaForge exists</div>
+        <h2 class="section-title heading">Everyone has a game in them. Almost no one ships it.</h2>
+        <div class="vision-text">
+          <p>Roblox Studio proved that millions of people will build games if the barrier to entry is a drag-and-drop editor instead of a compiler. But Roblox Studio ends on Roblox's platform, under Roblox's economy.</p>
+          <p>LuaForge takes the same no-code philosophy — node-graph logic, a familiar docked editor, instant play-testing — and points it at the open PC market. Build a game with zero lines of code, then ship it straight to Steam, keep the lion's share of the revenue, and own the audience you built.</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center;">
+        <div class="vision-quote heading">"You built a game. Now ship it to Steam." — that's the whole pitch.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="waitlist">
+  <div class="wrap">
+    <div class="waitlist-inner">
+      <div class="eyebrow">Get early access</div>
+      <h2 class="section-title heading">Join the waitlist.</h2>
+      <p style="margin-top:16px; color:var(--secondary); font-size:.95rem; line-height:1.6;">Private testing opens Late 2026 with roughly 50 invite-only creators. Get on the list now and we'll reach out when a spot opens up.</p>
+      <form class="wl-form" id="wlForm">
+        <input type="email" class="wl-input" id="wlEmail" placeholder="you@email.com" required>
+        <button type="submit" class="btn btn-primary" style="justify-content:center;">Join Waitlist</button>
+      </form>
+      <div class="wl-note">No spam. One email when your access is ready.</div>
+      <div class="wl-success mono" id="wlSuccess">✓ You're on the list. Watch your inbox.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-mark"><div class="heading">LUAFORGE</div></div>
+    <div class="footer-grid">
+      <div>
+        <div class="col-title">Product</div>
+        <ul><li>Editor</li><li>Visual Scripting</li><li>AI Copilot</li><li>Steam Pipeline</li></ul>
+      </div>
+      <div>
+        <div class="col-title">Roadmap</div>
+        <ul>
+          <li>2024 · Foundation</li>
+          <li>2025–2026 · Editor (You Are Here)</li>
+          <li>Late 2026 · Private Testing</li>
+          <li>Early 2027 · Public Testing</li>
+          <li>Late 2027 · Steam Beta</li>
+          <li>2028 · v1.0 Launch</li>
+        </ul>
+      </div>
+      <div>
+        <div class="col-title">Community</div>
+        <ul><li><a href="https://discord.gg/xJPahTQ4c" target="_blank" rel="noopener noreferrer">Discord</a></li><li>Devlog</li></ul>
+      </div>
+      <div>
+        <div class="col-title">About</div>
+        <ul><li>Mission</li><li>Team</li><li>Press Kit</li><li>Careers</li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2024 – 2026 LuaForge · All Rights Reserved</div>
+      <div class="live"><span class="dot" style="animation-duration:1.4s;"></span>Build 0.4.0 · In Development<span class="blink">_</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const PHASES = [
+  {index:"01", period:"Q1 – Q4 2024", title:"Foundation", subtitle:"Concept, research & core engine skeleton", status:"Complete", progress:100,
+   summary:"LuaForge was born. We defined the vision — a no-code, Roblox-Studio-inspired engine for shipping games to Steam — and built the technical foundation.",
+   features:["Product vision & pitch deck drafted","Competitive teardown (Roblox Studio, GDevelop, Godot, Construct)","Rendering pipeline research (OpenGL vs. Vulkan vs. WebGPU)","Core engine skeleton: entity system, scene graph, asset loader","Internal Lua sandbox spike (Lua 5.4 + LuaJIT eval)","First 'hello cube' scene rendered in editor shell"],
+   stack:["C++20","Lua 5.4","OpenGL 4.6","CMake","Dear ImGui"],
+   kpis:[{l:"Engine boot time",v:"< 1.2s"},{l:"Test scenes built",v:"12"},{l:"Team size",v:"1 dev"}],
+   risks:["Solo-dev bandwidth vs. engine scope","Choosing a rendering API that scales to Steam-class titles"]},
+  {index:"02", period:"Q1 2025 – Mid 2026", title:"Editor & Visual Scripting — You Are Here", subtitle:"Still building. The Roblox-Studio-style workspace is coming together.", status:"In Progress", progress:45,
+   summary:"This is where LuaForge lives right now. The editor shell is up, the node-graph runtime works, and we're wiring the visual scripting language into a real creative tool. Roughly half the pillars for this phase are shipped — the rest are actively being built and internally tested.",
+   features:["Docked, multi-viewport editor (Scene, Hierarchy, Inspector, Console) — done","Drag-and-drop primitive & prefab placement — done","Visual scripting graph (event → condition → action) — core done, expanding node library","Live 'Play in Editor' with hot-reload of scripts — in progress","Undo/redo history with 500-step buffer — planned","Project templates: Obby, FPS, Tycoon, Racing, 2D Platformer — 2 of 5 shipped"],
+   stack:["C++20","Qt 6","Node-graph runtime","Lua bindings","SQLite"],
+   kpis:[{l:"Phase progress",v:"45%"},{l:"Editor cold start",v:"1.8s"},{l:"Nodes shipped",v:"40+ / 80"},{l:"Templates ready",v:"2 / 5"}],
+   risks:["Node-graph performance on 5k+ node projects","UX complexity creep — keeping it beginner-friendly","Solo-dev velocity vs. remaining scope before testing opens"]},
+  {index:"03", period:"Q3 – Q4 2026", title:"Private Testing", subtitle:"Invite-only creators, closed playtesting, AI copilot polish", status:"Planned", progress:0,
+   summary:"Once the editor is production-ready, LuaForge enters private testing. A hand-picked circle of ~50 creators will stress-test the editor behind closed doors, the AI copilot will draft nodes from plain English, and we'll polish every rough edge before opening the gates.",
+   features:["Private testing with ~50 creators (Discord invite-only)","AI Copilot: 'describe it, LuaForge builds it' — generates node graphs, textures & scripts","AI asset generator for props, skyboxes & sound FX","Cloud project sync + version history","In-editor tutorial track (30-minute onboarding)","Bug/telemetry pipeline (Sentry + custom crash reporter)"],
+   stack:["Emergent LLM (GPT-5.2)","Gemini Nano Banana","PostgreSQL","S3","React (web console)"],
+   kpis:[{l:"Target private testers",v:"50"},{l:"Target games built",v:"100+"},{l:"Time-to-first-scene",v:"< 10 min"},{l:"Copilot acceptance",v:"60%+"}],
+   risks:["LLM latency spikes hurting the 'instant feedback' loop","Private testers outrunning available templates","Scope discipline — resisting feature bloat pre-beta"]},
+  {index:"04", period:"Q1 – Q2 2027", title:"Public Testing", subtitle:"Open beta doors, thousands of creators, live editor", status:"Planned", progress:0,
+   summary:"Doors open. Anyone can sign up, download the editor, and start building — no invite required. Public testing is where LuaForge stops being a whisper and starts being a movement.",
+   features:["Public sign-ups (no invite gate)","Free forever tier + Creator Pro paid plan","Public bug tracker + weekly patch cadence","Community-run Discord support channels","Live-ops dashboard for editor telemetry","First LuaForge Showcase event (creator demo day)","Feature-request voting board"],
+   stack:["PostHog","Sentry","Cloudflare","Discord API"],
+   kpis:[{l:"Public sign-ups",v:"10,000+"},{l:"Weekly active creators",v:"3,000"},{l:"Median session",v:"38 min"},{l:"Bug SLA (P0)",v:"< 48h"}],
+   risks:["Support load spike from open sign-ups","Server scaling under unpredictable traffic","Community moderation at day-one scale"]},
+  {index:"05", period:"Q3 – Q4 2027", title:"Beta & Steam Pipeline", subtitle:"One-click publishing to the world's biggest PC store", status:"Planned", progress:0,
+   summary:"The headline promise of LuaForge — 'you built a game, now ship it to Steam' — comes online. The Steam publishing pipeline goes live for every public tester.",
+   features:["One-click Steam build: SteamPipe upload, depots, launch config","Steamworks integration: achievements, leaderboards, Workshop","Windows / macOS / Linux export targets","Multiplayer starter kit (netcode + relay servers)","Asset marketplace (free + paid, 70/30 rev share to creators)","In-editor monetization hooks (Steam DLC & microtxn templates)"],
+   stack:["Steamworks SDK","GameNetworkingSockets","AWS GameLift","Stripe Connect"],
+   kpis:[{l:"Games published",v:"250+"},{l:"Marketplace SKUs",v:"1,500"},{l:"Creator payout",v:"70%"},{l:"Steam approval",v:"> 85%"}],
+   risks:["Steam Direct approval friction for first-time creators","Netcode quality on low-end hardware","Marketplace moderation at scale"]},
+  {index:"06", period:"2028", title:"Global 1.0 Launch", subtitle:"LuaForge goes public. Anyone can ship a Steam game.", status:"Planned", progress:0,
+   summary:"LuaForge exits beta. A polished, monetized, community-fed engine — the fastest way for a non-coder to reach a paying Steam audience.",
+   features:["LuaForge 1.0 stable release","Console export research spike (Switch 2, Xbox, PS5)","LuaForge Academy — free video curriculum & certification","Creator Fund: $1M grant program for standout titles","Team collaboration (multi-cursor editing, roles, PR reviews)","Mobile companion app (project browser, remote playtest)","Localized editor: EN, ES, PT-BR, DE, JP, KR, ZH"],
+   stack:["LuaForge Cloud (K8s)","Stripe billing","Cloudflare CDN","PostHog"],
+   kpis:[{l:"Monthly active",v:"100k target"},{l:"Titles on Steam",v:"5,000+"},{l:"Creator revenue",v:"$5M+ ARR"},{l:"NPS",v:"> 55"}],
+   risks:["Platform-fee pressure squeezing creator margins","Console cert timelines outside our control","Support load scaling with creator base"]},
+];
+
+const PILLARS = [
+  {icon:"M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0H5a2 2 0 01-2-2v-4m6 6h10a2 2 0 002-2v-4", title:"No-Code Visual Scripting", body:"Event → Condition → Action nodes. Wire logic like Lego. Under the hood: Lua 5.4 with hot-reload."},
+  {icon:"M3 3h18v18H3V3zm4 4h10v3H7V7zm0 5h10v6H7v-6z", title:"Studio-Style Editor", body:"Docked panels, scene hierarchy, inspector, live preview. Familiar if you've touched Roblox Studio or Unity."},
+  {icon:"M4.5 16.5L12 3l7.5 13.5M9 21h6M12 15v6", title:"One-Click Steam Publish", body:"SteamPipe, depots, achievements, Workshop — LuaForge handles the pipeline you never wanted to learn."},
+  {icon:"M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z", title:"AI Copilot", body:"Describe a mechanic in plain English. LuaForge drafts the node graph, spawns props, and wires the events."},
+  {icon:"M3 7l9-4 9 4-9 4-9-4zm0 6l9 4 9-4M3 13v4l9 4 9-4v-4", title:"Asset Marketplace", body:"Free & paid props, sounds, shaders. Creators keep 70%. Every asset drag-drops straight into your scene."},
+  {icon:"M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 3a4 4 0 10-8 0", title:"Multiplayer Starter Kits", body:"Netcode, matchmaking, relay servers pre-wired. Ship co-op or competitive without touching sockets."},
+  {icon:"M22 10L12 4 2 10l10 6 10-6zm-2 3v5c0 1-4 3-8 3s-8-2-8-3v-5", title:"Templates & Academy", body:"Obby, FPS, tycoon, racing, 2D platformer. Free video curriculum. Zero → first Steam page in a weekend."},
+  {icon:"M12 2a10 10 0 100 20 10 10 0 000-20zm0 5v10m-3-4h6", title:"Built-In Monetization", body:"DLC, microtransactions, Steam achievements, and creator-side revenue share — configured in the inspector."},
+];
+
+function iconSvg(path){
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>`;
+}
+
+document.getElementById('pillarsGrid').innerHTML = PILLARS.map(p => `
+  <div class="pillar">
+    <div class="pillar-icon">${iconSvg(p.icon)}</div>
+    <h3 class="heading">${p.title}</h3>
+    <p>${p.body}</p>
+  </div>
+`).join('');
+
+function statusClass(s){
+  if(s === "Complete") return "status-complete";
+  if(s === "In Progress") return "status-progress";
+  return "status-planned";
+}
+
+document.getElementById('phasesContainer').innerHTML = PHASES.map((p, i) => `
+  <div class="phase" data-idx="${i}">
+    <div class="phase-dot"></div>
+    <div class="phase-left">
+      <div class="phase-index mono">PHASE ${p.index}</div>
+      <div class="phase-period mono">${p.period}</div>
+      <div class="phase-title heading">${p.title}</div>
+      <div class="phase-subtitle">${p.subtitle}</div>
+      <div class="status-badge ${statusClass(p.status)}">${p.status}</div>
+      <div class="progress-track"><div class="progress-fill" style="width:${p.progress}%"></div></div>
+    </div>
+    <div class="phase-card">
+      <p class="phase-summary">${p.summary}</p>
+      <div class="block-label">Features</div>
+      <ul class="feature-list">${p.features.map(f => `<li>${f}</li>`).join('')}</ul>
+      <div class="block-label">Tech Stack</div>
+      <div class="tags">${p.stack.map(s => `<span class="tag mono">${s}</span>`).join('')}</div>
+      <div class="block-label">KPIs</div>
+      <div class="kpi-grid">${p.kpis.map(k => `<div class="kpi"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div></div>`).join('')}</div>
+      <div class="block-label">Risks</div>
+      <ul class="risk-list">${p.risks.map(r => `<li>${r}</li>`).join('')}</ul>
+    </div>
+  </div>
+`).join('');
+
+// scroll progress line + active phase
+const railLine = document.querySelector('.rail-line');
+const railFill = document.getElementById('railFill');
+const phaseEls = Array.from(document.querySelectorAll('.phase'));
+
+function updateRail(){
+  const rect = railLine.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const total = rect.height;
+  const progressed = Math.min(Math.max(vh * 0.5 - rect.top, 0), total);
+  railFill.style.height = progressed + 'px';
+
+  phaseEls.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if(r.top < vh * 0.5 && r.bottom > vh * 0.2){
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+}
+window.addEventListener('scroll', updateRail, {passive:true});
+window.addEventListener('resize', updateRail);
+updateRail();
+
+// mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+// waitlist form (client-side only demo)
+document.getElementById('wlForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  document.getElementById('wlSuccess').style.display = 'block';
+  document.getElementById('wlForm').reset();
+});
+
+// download roadmap as markdown
+function buildMarkdown(){
+  let md = `# LuaForge Roadmap\n\nMake Steam games. Never write code.\n\n`;
+  PHASES.forEach(p => {
+    md += `## Phase ${p.index} — ${p.title} (${p.period})\n\n`;
+    md += `**Status:** ${p.status} (${p.progress}%)\n\n${p.summary}\n\n`;
+    md += `### Features\n` + p.features.map(f => `- ${f}`).join('\n') + '\n\n';
+    md += `### Tech Stack\n` + p.stack.join(', ') + '\n\n';
+    md += `### KPIs\n` + p.kpis.map(k => `- ${k.l}: ${k.v}`).join('\n') + '\n\n';
+    md += `### Risks\n` + p.risks.map(r => `- ${r}`).join('\n') + '\n\n---\n\n';
+  });
+  return md;
+}
+function download(){
+  const blob = new Blob([buildMarkdown()], {type:'text/markdown'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'LuaForge-Roadmap.md';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+document.getElementById('downloadBtn').addEventListener('click', (e) => { e.preventDefault(); download(); });
+document.getElementById('downloadBtn2').addEventListener('click', (e) => { e.preventDefault(); download(); });
+</script>
+</body>
+</html>
